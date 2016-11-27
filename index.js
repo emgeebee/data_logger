@@ -5,21 +5,27 @@ var fs = require('fs');
 var Logger = function() {
     this.types = [];
     this.date = new Date();
-    this.month = this.date.getMonth();
-    this.getData(this.addNewData.bind(this));
+    this.year = this.date.getFullYear();
+    this.month = this.date.getMonth() + 1;
+    this.file = `data/data-${this.year}-${this.month}.json`;
+    this.getData();
 }
 
 Logger.prototype = {
     getData: function(cb) {
-        fs.readFile('data/data.json', this.gotData.bind(this, cb));
+        console.log('GETTING');
+        fs.readFile(this.file, this.gotData.bind(this));
     },
 
-    gotData: function(cb, err, file) {
-        if (err) {
+    gotData: function(err, file) {
+        if (err && err.code == 'ENOENT') {
+            file = '{}';
+        } else if (err) {
             return;
         }
         this.data = JSON.parse(file);
-        cb();
+        console.log(this.data);
+        this.addNewData();
     },
 
     processData: function() {
@@ -41,7 +47,8 @@ Logger.prototype = {
                 })
             }
         })
-        fs.writeFile('data/data.json', JSON.stringify(this.data, null, 4), this.getData(this.processData.bind(this)));
+        this.data = JSON.parse(JSON.stringify(this.data));
+        fs.writeFile(this.file, JSON.stringify(this.data, null, 4), this.processData.bind(this));
     },
 
     generateLastMonth: function() {
