@@ -1,11 +1,11 @@
 # Plot yearly PV values, one per line.
 # See http://gnuplot.sourceforge.net/demo/finance.html
 set terminal png
-set output "out/month.png"
+set output output
 set title "Test"
 set grid
 set xdata time
 set timefmt "%Y-%m-%dT%H:%M:%S"
 set format x "%a %d\n%m"
-plot "data/data.temp.dat" using 1:2 title "raw" with lines, \
+plot input using 1:2 title "raw" with lines, \
      "" using 1:2 smooth bezier title "smooth" with lines lw 2

@@ -7,7 +7,8 @@ var Logger = function() {
     this.date = new Date();
     this.year = this.date.getFullYear();
     this.month = this.date.getMonth() + 1;
-    this.file = `data/data-${this.year}-${this.month}.json`;
+    this.dataFolder = `${__dirname}/data`;
+    this.file = `${this.dataFolder}/data-${this.year}-${this.month}.json`;
     this.getData();
 }
 
@@ -24,11 +25,14 @@ Logger.prototype = {
             return;
         }
         this.data = JSON.parse(file);
-        console.log(this.data);
         this.addNewData();
     },
 
-    processData: function() {
+    processData: function(err) {
+        if (err) {
+            console.log(err);
+            return;
+        }
         this.generateLastMonth();
         this.generateLastMonthAverages();
     },
@@ -48,6 +52,7 @@ Logger.prototype = {
             }
         })
         this.data = JSON.parse(JSON.stringify(this.data));
+        console.log(this.data, this.file);
         fs.writeFile(this.file, JSON.stringify(this.data, null, 4), this.processData.bind(this));
     },
 
@@ -59,7 +64,7 @@ Logger.prototype = {
                 data.forEach(a => {
                     string += `${a.date} ${a.value}\n`;
                 })
-                fs.writeFile(`data/data.month.${type}.dat`, string, ()=>{});
+                fs.writeFile(`${this.dataFolder}/data.month.${type}.dat`, string, ()=>{});
             }
         );
     },
@@ -83,7 +88,7 @@ Logger.prototype = {
 					avObj[hour].forEach(val => {sum += parseInt(val)});
 					string += `${hour} ${sum/avObj[hour].length}\n`;
 				}	
-                fs.writeFile(`data/data.ave.${type}.dat`, string, ()=>{});
+                fs.writeFile(`${this.dataFolder}/data.ave.${type}.dat`, string, ()=>{});
 			}
 		)
 	}
