@@ -1,0 +1,11 @@
+# Plot yearly PV values, one per line.
+# See http://gnuplot.sourceforge.net/demo/finance.html
+set terminal png
+set output "out/month_ave_temp.png"
+set title "Ave Temp last month"
+set grid
+set xdata time
+set timefmt "%H"
+set format x "%H"
+plot "data/data.ave.temp.dat" using 1:2 title "raw" with lines, \
+     "" using 1:2 smooth bezier title "smooth" with lines lw 2
