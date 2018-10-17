@@ -34,7 +34,7 @@ Logger.prototype = {
             console.log(err);
             return;
         }
-        new Calc(this.types);
+        // new Calc(this.types);
         new Calc(this.types, this.month);
     },
 
